@@ -3,9 +3,10 @@ exports.up = function(knex) {
     usersTable
       .string("username", 50)
       .primary()
-      .unique();
-    usersTable.string("name", 50);
-    usersTable.string("avatar_url");
+      .unique()
+      .notNullable();
+    usersTable.string("name", 50).notNullable();
+    usersTable.string("avatar_url").notNullable();
   });
 };
 
