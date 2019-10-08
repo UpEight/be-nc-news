@@ -142,6 +142,26 @@ describe("formatDates", () => {
   });
 });
 
-describe("makeRefObj", () => {});
+describe("makeRefObj", () => {
+  it("returns a new empty object when passed an empty array", () => {
+    const actual = makeRefObj([]);
+    const expected = {};
+    expect(actual).to.eql(expected);
+  });
+  it("returns an object containing the title and article id as a key-value pair when passed an array containing 1 article object", () => {
+    const actual = makeRefObj([{ article_id: 1, title: "A" }]);
+    const expected = { A: 1 };
+    expect(actual).to.eql(expected);
+  });
+  it("returns an object containing the title and article id as key-value pairs when passed an array containing multiple article objects", () => {
+    const actual = makeRefObj([
+      { article_id: 1, title: "A" },
+      { article_id: 2, title: "B" },
+      { article_id: 3, title: "C" }
+    ]);
+    const expected = { A: 1, B: 2, C: 3 };
+    expect(actual).to.eql(expected);
+  });
+});
 
 describe("formatComments", () => {});
