@@ -18,4 +18,25 @@ exports.makeRefObj = list => {
   return refObj;
 };
 
-exports.formatComments = (comments, articleRef) => {};
+exports.formatComments = (comments, articleRef) => {
+  if (comments.length === 0 || Object.keys(articleRef).length === 0) {
+    return [];
+  }
+  const formattedComments = comments.map(comment => {
+    const formattedComment = { ...comment };
+    if (comment.hasOwnProperty("created_by")) {
+      formattedComment.author = formattedComment.created_by;
+      delete formattedComment.created_by;
+    }
+    if (comment.hasOwnProperty("belongs_to")) {
+      formattedComment.article_id = articleRef[formattedComment.belongs_to];
+      delete formattedComment.belongs_to;
+    }
+    if (comment.hasOwnProperty("created_at")) {
+      formattedComment.created_at = new Date(formattedComment.created_at);
+    }
+    return formattedComment;
+  });
+
+  return formattedComments;
+};

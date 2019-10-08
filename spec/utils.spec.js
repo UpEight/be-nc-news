@@ -164,4 +164,201 @@ describe("makeRefObj", () => {
   });
 });
 
-describe("formatComments", () => {});
+describe("formatComments", () => {
+  /*
+  {
+  body: ' I carry a log — yes. Is it funny to you? It is not to me.',
+  belongs_to: 'Living in the shadow of a great man',
+  created_by: 'icellusedkars',
+  votes: -100,
+  created_at: 1416746163389,
+}
+
+This utility function should be able to take an array of comment objects (`comments`) and a reference object, and return a new array of formatted comments.
+
+Each formatted comment must have:
+
+- Its `created_by` property renamed to an `author` key
+- Its `belongs_to` property renamed to an `article_id` key
+- The value of the new `article_id` key must be the id corresponding to the original title value provided
+- Its `created_at` value converted into a javascript date object
+- The rest of the comment's properties must be maintained
+  */
+
+  it("returns a new empty array when passed an empty array and and a reference object", () => {
+    const comments = [];
+    const refObj = { A: 1, B: 2, C: 3 };
+    const actual = formatComments(comments, refObj);
+    const expected = [];
+    expect(actual).to.eql(expected);
+    expect(actual).to.not.equal(comments);
+  });
+  it("returns a new array containing a new comments object with the `created_by` property renamed to an `author` key when passed an array containing 1 comment object", () => {
+    const comments = [
+      {
+        created_by: "icellusedkars"
+      }
+    ];
+    const refObj = {
+      A: 1,
+      "Living in the shadow of a great man": 2,
+      "They're not exactly dogs, are they?": 3
+    };
+    const actual = formatComments(comments, refObj);
+    const expected = [
+      {
+        author: "icellusedkars"
+      }
+    ];
+    expect(actual).to.eql(expected);
+    expect(actual).to.not.equal(comments);
+    expect(comments).to.eql([
+      {
+        created_by: "icellusedkars"
+      }
+    ]);
+  });
+  it("returns a new array containing new comments objects with the `created_by` property renamed to an `author` key when passed an array containing multiple comments objects", () => {
+    const comments = [
+      {
+        created_by: "icellusedkars"
+      },
+      {
+        created_by: "butter_bridge"
+      },
+      {
+        created_by: "icellusedkars"
+      }
+    ];
+    const refObj = {
+      A: 1,
+      "Living in the shadow of a great man": 2,
+      "They're not exactly dogs, are they?": 3
+    };
+    const actual = formatComments(comments, refObj);
+    const expected = [
+      {
+        author: "icellusedkars"
+      },
+      {
+        author: "butter_bridge"
+      },
+      {
+        author: "icellusedkars"
+      }
+    ];
+    expect(actual).to.eql(expected);
+  });
+  it("returns a new array containing new comments objects with the belongs_to` property renamed to an `article_id` key when passed an array containing multiple comments objects", () => {
+    const comments = [
+      {
+        belongs_to: "Living in the shadow of a great man"
+      },
+      {
+        belongs_to: "A"
+      },
+      {
+        belongs_to: "They're not exactly dogs, are they?"
+      }
+    ];
+    const refObj = {
+      A: 1,
+      "Living in the shadow of a great man": 2,
+      "They're not exactly dogs, are they?": 3
+    };
+    const actual = formatComments(comments, refObj);
+    expect(Object.keys(actual[0])).to.eql(["article_id"]);
+  });
+  it("returns a new array containing new comments objects with the belongs_to` property changed to the `article_id` when passed an array containing multiple comments objects", () => {
+    const comments = [
+      {
+        belongs_to: "Living in the shadow of a great man"
+      },
+      {
+        belongs_to: "A"
+      },
+      {
+        belongs_to: "They're not exactly dogs, are they?"
+      }
+    ];
+    const refObj = {
+      A: 1,
+      "Living in the shadow of a great man": 2,
+      "They're not exactly dogs, are they?": 3
+    };
+    const actual = formatComments(comments, refObj);
+    const expected = [
+      {
+        article_id: 2
+      },
+      {
+        article_id: 1
+      },
+      {
+        article_id: 3
+      }
+    ];
+    expect(actual).to.eql(expected);
+  });
+  it("handles being passed an empty reference object", () => {
+    const comments = [
+      {
+        body: "This is a bad article name",
+        belongs_to: "A",
+        created_by: "butter_bridge",
+        votes: 1,
+        created_at: 1038314163389
+      },
+      {
+        body: "The owls are not what they seem.",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "icellusedkars",
+        votes: 20,
+        created_at: 1006778163389
+      },
+      {
+        body: "This morning, I showered for nine minutes.",
+        belongs_to: "Living in the shadow of a great man",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 975242163389
+      }
+    ];
+    const refObj = {};
+    const actual = formatComments(comments, refObj);
+    const expected = [];
+    expect(actual).to.eql(expected);
+  });
+  it("converts each comment's 'created_at' value into a JavaScript Date object", () => {
+    const comments = [
+      {
+        body: "This is a bad article name",
+        belongs_to: "A",
+        created_by: "butter_bridge",
+        votes: 1,
+        created_at: 1038314163389
+      },
+      {
+        body: "The owls are not what they seem.",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "icellusedkars",
+        votes: 20,
+        created_at: 1006778163389
+      },
+      {
+        body: "This morning, I showered for nine minutes.",
+        belongs_to: "Living in the shadow of a great man",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 975242163389
+      }
+    ];
+    const refObj = {
+      A: 1,
+      "Living in the shadow of a great man": 2,
+      "They're not exactly dogs, are they?": 3
+    };
+    const actual = formatComments(comments, refObj);
+    expect(actual[2].created_at).to.eql(new Date(975242163389));
+  });
+});
