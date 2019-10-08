@@ -165,26 +165,6 @@ describe("makeRefObj", () => {
 });
 
 describe("formatComments", () => {
-  /*
-  {
-  body: ' I carry a log — yes. Is it funny to you? It is not to me.',
-  belongs_to: 'Living in the shadow of a great man',
-  created_by: 'icellusedkars',
-  votes: -100,
-  created_at: 1416746163389,
-}
-
-This utility function should be able to take an array of comment objects (`comments`) and a reference object, and return a new array of formatted comments.
-
-Each formatted comment must have:
-
-- Its `created_by` property renamed to an `author` key
-- Its `belongs_to` property renamed to an `article_id` key
-- The value of the new `article_id` key must be the id corresponding to the original title value provided
-- Its `created_at` value converted into a javascript date object
-- The rest of the comment's properties must be maintained
-  */
-
   it("returns a new empty array when passed an empty array and and a reference object", () => {
     const comments = [];
     const refObj = { A: 1, B: 2, C: 3 };
@@ -360,5 +340,59 @@ Each formatted comment must have:
     };
     const actual = formatComments(comments, refObj);
     expect(actual[2].created_at).to.eql(new Date(975242163389));
+  });
+  it("does not mutate the passed array of comments objects", () => {
+    const comments = [
+      {
+        body: "This is a bad article name",
+        belongs_to: "A",
+        created_by: "butter_bridge",
+        votes: 1,
+        created_at: 1038314163389
+      },
+      {
+        body: "The owls are not what they seem.",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "icellusedkars",
+        votes: 20,
+        created_at: 1006778163389
+      },
+      {
+        body: "This morning, I showered for nine minutes.",
+        belongs_to: "Living in the shadow of a great man",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 975242163389
+      }
+    ];
+    const refObj = {
+      A: 1,
+      "Living in the shadow of a great man": 2,
+      "They're not exactly dogs, are they?": 3
+    };
+    formatComments(comments, refObj);
+    expect(comments).to.eql([
+      {
+        body: "This is a bad article name",
+        belongs_to: "A",
+        created_by: "butter_bridge",
+        votes: 1,
+        created_at: 1038314163389
+      },
+      {
+        body: "The owls are not what they seem.",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "icellusedkars",
+        votes: 20,
+        created_at: 1006778163389
+      },
+      {
+        body: "This morning, I showered for nine minutes.",
+        belongs_to: "Living in the shadow of a great man",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 975242163389
+      }
+    ]);
   });
 });
