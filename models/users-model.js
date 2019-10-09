@@ -4,5 +4,11 @@ exports.selectUserByUsername = username => {
   return connection
     .select("*")
     .from("users")
-    .where("username", username);
+    .where("username", username)
+    .then(users => {
+      if (users.length === 0) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+      return users[0];
+    });
 };

@@ -52,6 +52,14 @@ describe("app", () => {
             expect(user).to.have.keys("username", "avatar_url", "name");
           });
       });
+      it("GET /:notAUsername responds with status 404, User not found", () => {
+        return request(app)
+          .get("/api/users/notAUsername")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("User not found");
+          });
+      });
     });
   });
 });
