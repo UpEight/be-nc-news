@@ -75,5 +75,23 @@ describe("app", () => {
         });
       });
     });
+    describe("/articles", () => {
+      it("GET /:article_id responds with 200 and the requested article object", () => {
+        return request(app)
+          .get("/api/articles/1")
+          .expect(200)
+          .then(({ body: { article } }) => {
+            expect(article).to.contain.keys(
+              "author",
+              "title",
+              "article_id",
+              "body",
+              "topic",
+              "created_at",
+              "votes"
+            );
+          });
+      });
+    });
   });
 });
