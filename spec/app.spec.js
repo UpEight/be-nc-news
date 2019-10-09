@@ -28,6 +28,20 @@ describe("app", () => {
             expect(body.topics[0]).to.have.keys("slug", "description");
           });
       });
+      describe("INVALID METHODS", () => {
+        it("POST, PATCH, PUT, DELETE / responds with status 405, Method not allowed", () => {
+          const invalidMethods = ["post", "patch", "put", "delete"];
+          const methodPromises = invalidMethods.map(method => {
+            return request(app)
+              [method]("/api/topics")
+              .expect(405)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal("Method not allowed");
+              });
+          });
+          return Promise.all(methodPromises);
+        });
+      });
     });
   });
 });
