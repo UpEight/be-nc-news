@@ -108,6 +108,14 @@ describe("app", () => {
             expect(msg).to.equal("Bad request");
           });
       });
+      it("GET /:articleIdDoesNotExist responds with 404, Article not found", () => {
+        return request(app)
+          .get("/api/articles/15")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("No article found with article_id = 15");
+          });
+      });
     });
   });
 });

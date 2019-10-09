@@ -9,6 +9,12 @@ exports.selectArticleById = id => {
     .groupBy("articles.article_id")
     .count({ comment_count: "comments.comment_id" })
     .then(([article]) => {
+      if (!article) {
+        return Promise.reject({
+          status: 404,
+          msg: `No article found with article_id = ${id}`
+        });
+      }
       article.comment_count = parseInt(article.comment_count);
       return article;
     });
