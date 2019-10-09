@@ -57,7 +57,7 @@ describe("app", () => {
           .get("/api/users/notAUsername")
           .expect(404)
           .then(({ body: { msg } }) => {
-            expect(msg).to.equal("User not found");
+            expect(msg).to.equal("No user found with username = notAUsername");
           });
       });
       describe("INVALID METHODS", () => {
