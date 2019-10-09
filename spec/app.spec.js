@@ -43,5 +43,15 @@ describe("app", () => {
         });
       });
     });
+    describe("/users", () => {
+      it("GET /:username responds with status 200 and the requested user object", () => {
+        return request(app)
+          .get("/api/users/butter_bridge")
+          .expect(200)
+          .then(({ body: { user } }) => {
+            expect(user).to.have.keys("username", "avatar_url", "name");
+          });
+      });
+    });
   });
 });
