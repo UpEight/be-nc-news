@@ -92,6 +92,14 @@ describe("app", () => {
             );
           });
       });
+      it("GET /:article_id 200 response article object includes a comment count", () => {
+        return request(app)
+          .get("/api/articles/1")
+          .expect(200)
+          .then(({ body: { article } }) => {
+            expect(article.comment_count).to.be.a("number");
+          });
+      });
     });
   });
 });
