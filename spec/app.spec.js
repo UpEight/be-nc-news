@@ -5,6 +5,16 @@ const app = require("../app");
 const connection = require("../db/connection");
 
 describe("app", () => {
+  describe("/notARoute", () => {
+    it("GET / reponds with status 404 and error message", () => {
+      return request(app)
+        .get("/notARoute")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).to.equal("Route not found");
+        });
+    });
+  });
   describe("/api", () => {
     beforeEach(() => connection.seed.run());
     after(() => connection.destroy());
