@@ -116,6 +116,26 @@ describe("app", () => {
             expect(msg).to.equal("No article found with article_id = 15");
           });
       });
+      it("PATCH /:article_id accepts a vote object and responds with status 201 and the updated article", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ inc_votes: 5 })
+          .expect(201)
+          .then(({ body: { article } }) => {
+            expect(article.votes).to.equal(105);
+            expect(article.article_id).to.equal(1);
+          })
+          .then(() => {
+            return request(app)
+              .patch("/api/articles/1")
+              .send({ inc_votes: -20 })
+              .expect(201)
+              .then(({ body: { article } }) => {
+                expect(article.votes).to.equal(85);
+                expect(article.article_id).to.equal(1);
+              });
+          });
+      });
     });
   });
 });

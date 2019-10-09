@@ -19,3 +19,13 @@ exports.selectArticleById = id => {
       return article;
     });
 };
+
+exports.updateVotes = ({ article_id }, { inc_votes }) => {
+  return connection("articles")
+    .where("article_id", article_id)
+    .increment("votes", inc_votes)
+    .returning("*")
+    .then(([article]) => {
+      return article;
+    });
+};
