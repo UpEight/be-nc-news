@@ -94,10 +94,18 @@ describe("app", () => {
       });
       it("GET /:article_id 200 response article object includes a comment count", () => {
         return request(app)
-          .get("/api/articles/1")
+          .get("/api/articles/9")
           .expect(200)
           .then(({ body: { article } }) => {
             expect(article.comment_count).to.be.a("number");
+          });
+      });
+      it("GET /notAnId responds with status 400, Bad request", () => {
+        return request(app)
+          .get("/api/articles/notAnId")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Bad request");
           });
       });
     });
