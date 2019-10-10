@@ -332,6 +332,14 @@ describe("app", () => {
               );
             });
         });
+        it("GET /comments responds with 400, Bad request, if /:article_id is of wrong type", () => {
+          return request(app)
+            .get("/api/articles/notAnId/comments")
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal("Bad request");
+            });
+        });
       });
     });
   });
