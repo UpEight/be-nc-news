@@ -348,6 +348,16 @@ describe("app", () => {
               expect(msg).to.equal("Bad request");
             });
         });
+        it("GET /comments?order=invalid_sort responds with 400, Bad request", () => {
+          return request(app)
+            .get("/api/articles/1/comments?order=invalid_sort")
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal(
+                "Unable to order comments by query ?order=invalid_sort - order parameter must be 'asc' or 'desc'"
+              );
+            });
+        });
       });
     });
   });
