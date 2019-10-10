@@ -252,6 +252,18 @@ describe("app", () => {
               expect(msg).to.equal("Bad request");
             });
         });
+        it("POST /comments responds with status 400, Bad request if /:article_id is of wrong type", () => {
+          return request(app)
+            .post("/api/articles/notAnId/comments")
+            .send({
+              username: "icellusedkars",
+              body: "This is a really great article!"
+            })
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal("Bad request");
+            });
+        });
       });
     });
   });
