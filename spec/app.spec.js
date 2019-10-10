@@ -340,6 +340,14 @@ describe("app", () => {
               expect(msg).to.equal("Bad request");
             });
         });
+        it("GET /comments?sort_by=invalid_column responds with 400, Bad request", () => {
+          return request(app)
+            .get("/api/articles/1/comments?sort_by=invalid_column")
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal("Bad request");
+            });
+        });
       });
     });
   });
