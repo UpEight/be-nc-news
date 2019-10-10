@@ -264,6 +264,21 @@ describe("app", () => {
               expect(msg).to.equal("Bad request");
             });
         });
+        it("GET /comments responds with 200 and an array of comments for the requested /:article_id", () => {
+          return request(app)
+            .get("/api/articles/1/comments")
+            .expect(200)
+            .then(({ body: { comments } }) => {
+              expect(comments).to.be.an("array");
+              expect(comments[0]).to.have.keys(
+                "comment_id",
+                "author",
+                "votes",
+                "created_at",
+                "body"
+              );
+            });
+        });
       });
     });
   });

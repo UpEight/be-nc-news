@@ -4,7 +4,10 @@ const {
   changeVotes
 } = require("../controllers/articles-controller");
 
-const { postComment } = require("../controllers/comments-controller");
+const {
+  postComment,
+  sendComments
+} = require("../controllers/comments-controller");
 
 const { send405Error } = require("../errors");
 
@@ -14,6 +17,9 @@ articlesRouter
   .patch(changeVotes)
   .all(send405Error);
 
-articlesRouter.route("/:article_id/comments").post(postComment);
+articlesRouter
+  .route("/:article_id/comments")
+  .post(postComment)
+  .get(sendComments);
 
 module.exports = articlesRouter;

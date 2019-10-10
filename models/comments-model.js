@@ -21,3 +21,10 @@ exports.insertComment = ({ article_id }, commentData) => {
       return comment;
     });
 };
+
+exports.selectComments = ({ article_id }) => {
+  return connection
+    .select("comment_id", "author", "votes", "created_at", "body")
+    .from("comments")
+    .where("article_id", article_id);
+};
