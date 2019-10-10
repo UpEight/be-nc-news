@@ -304,6 +304,24 @@ describe("app", () => {
               });
             });
         });
+        it("GET /comments?order=sort_order responds with 200 and an array of comments sorted in 'asc' or 'desc' order", () => {
+          return request(app)
+            .get("/api/articles/1/comments?order=asc")
+            .expect(200)
+            .then(({ body: { comments } }) => {
+              expect(comments).to.be.sortedBy("created_at");
+            })
+            .then(() => {
+              return request(app)
+                .get("/api/articles/1/comments?order=desc")
+                .expect(200)
+                .then(({ body: { comments } }) => {
+                  expect(comments).to.be.sortedBy("created_at", {
+                    descending: true
+                  });
+                });
+            });
+        });
       });
     });
   });
