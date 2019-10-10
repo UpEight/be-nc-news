@@ -240,6 +240,18 @@ describe("app", () => {
                 });
             });
         });
+        it("POST /comments responds with 400, Bad request if /:article_id does not exist", () => {
+          return request(app)
+            .post("/api/articles/15/comments")
+            .send({
+              username: "icellusedkars",
+              body: "This is a really great article!"
+            })
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal("Bad request");
+            });
+        });
       });
     });
   });
