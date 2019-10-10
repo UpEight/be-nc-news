@@ -322,6 +322,16 @@ describe("app", () => {
                 });
             });
         });
+        it("GET /comments responds with 404, Article not found if /:article_id does not exist", () => {
+          return request(app)
+            .get("/api/articles/15/comments")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal(
+                "Unable to get comments - no article found with article_id = 15"
+              );
+            });
+        });
       });
     });
   });
