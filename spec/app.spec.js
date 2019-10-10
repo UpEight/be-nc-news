@@ -1,5 +1,10 @@
 process.env.NODE_ENV = "test";
-const { expect } = require("chai");
+
+const chai = require("chai");
+const chaiSorted = require("chai-sorted");
+const { expect } = chai;
+chai.use(chaiSorted);
+
 const request = require("supertest");
 const app = require("../app");
 const connection = require("../db/connection");
@@ -277,6 +282,16 @@ describe("app", () => {
                 "created_at",
                 "body"
               );
+            });
+        });
+        it("GET /comments responds with 200 and an array of comments sorted by the 'created_at' column in descending order by default", () => {
+          return request(app)
+            .get("/api/articles/1/comments")
+            .expect(200)
+            .then(({ body: { comments } }) => {
+              expect(comments).to.be.sortedBy("created_at", {
+                descending: true
+              });
             });
         });
       });
