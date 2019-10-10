@@ -181,6 +181,20 @@ describe("app", () => {
             expect(msg).to.equal("Bad request");
           });
       });
+      describe("INVALID METHODS", () => {
+        it("POST, PUT, DELETE /:article_id responds with status 405, Method not allowed", () => {
+          const invalidMethods = ["post", "put", "delete"];
+          const methodPromises = invalidMethods.map(method => {
+            return request(app)
+              [method]("/api/articles/1")
+              .expect(405)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal("Method not allowed");
+              });
+          });
+          return Promise.all(methodPromises);
+        });
+      });
     });
   });
 });
