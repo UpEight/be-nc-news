@@ -20,12 +20,21 @@ exports.selectArticleById = id => {
     });
 };
 
-exports.updateVotes = ({ article_id }, { inc_votes }) => {
+exports.updateVotes = ({ article_id }, votesData) => {
+  if (Object.keys(votesData).length !== 1) {
+    return Promise.reject({ status: 400, msg: "Malformed request body" });
+  }
   return connection("articles")
     .where("article_id", article_id)
-    .increment("votes", inc_votes)
+    .increment("votes", votesData.inc_votes)
     .returning("*")
     .then(([article]) => {
+      if (!article) {
+        return Promise.reject({
+          status: 404,
+          msg: `No article found with article_id = ${article_id}`
+        });
+      }
       return article;
     });
 };

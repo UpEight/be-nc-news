@@ -136,6 +136,51 @@ describe("app", () => {
               });
           });
       });
+      it("PATCH /:article_id responds with 400 Bad request if sent malformed request body", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({})
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Malformed request body");
+          })
+          .then(() => {
+            return request(app)
+              .patch("/api/articles/1")
+              .send({ inc_votes: 5, name: "Mitch" })
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal("Malformed request body");
+              });
+          });
+      });
+      it("PATCH /:article_id responds with status 400 when sent value of wrong type", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ inc_votes: "wrong_value_type" })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Bad request");
+          });
+      });
+      it("PATCH /:articleIdDoesNotExist responds with 404, Article not found", () => {
+        return request(app)
+          .patch("/api/articles/15")
+          .send({ inc_votes: 5 })
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("No article found with article_id = 15");
+          });
+      });
+      it("PATCH /notAnId responds with status 400, Bad request", () => {
+        return request(app)
+          .patch("/api/articles/notAnId")
+          .send({ inc_votes: 5 })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Bad request");
+          });
+      });
     });
   });
 });
