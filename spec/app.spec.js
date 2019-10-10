@@ -294,6 +294,16 @@ describe("app", () => {
               });
             });
         });
+        it("GET /comments?sort_by=valid_column responds with 200 and an array of comments sorted by the 'valid_column' in descending order by default", () => {
+          return request(app)
+            .get("/api/articles/1/comments?sort_by=author")
+            .expect(200)
+            .then(({ body: { comments } }) => {
+              expect(comments).to.be.sortedBy("author", {
+                descending: true
+              });
+            });
+        });
       });
     });
   });

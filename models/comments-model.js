@@ -22,9 +22,10 @@ exports.insertComment = ({ article_id }, commentData) => {
     });
 };
 
-exports.selectComments = ({ article_id }) => {
+exports.selectComments = ({ article_id }, { sort_by }) => {
   return connection
     .select("comment_id", "author", "votes", "created_at", "body")
     .from("comments")
-    .where("article_id", article_id);
+    .where("article_id", article_id)
+    .orderBy(sort_by || "created_at", "desc");
 };
