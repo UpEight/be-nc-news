@@ -196,14 +196,14 @@ describe("app", () => {
         });
       });
       describe("/:article_id", () => {
-        it("POST /comments responds with status 200 and the posted comment object", () => {
+        it("POST /comments responds with status 201 and the created comment object", () => {
           return request(app)
             .post("/api/articles/3/comments")
             .send({
               username: "icellusedkars",
               body: "This is a really great article!"
             })
-            .expect(200)
+            .expect(201)
             .then(({ body: { comment } }) => {
               expect(comment).to.have.keys(
                 "comment_id",
