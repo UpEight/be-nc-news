@@ -195,6 +195,29 @@ describe("app", () => {
           return Promise.all(methodPromises);
         });
       });
+      describe("/:article_id", () => {
+        it("POST /comments responds with status 200 and the posted comment object", () => {
+          return request(app)
+            .post("/api/articles/3/comments")
+            .send({
+              username: "icellusedkars",
+              body: "This is a really great article!"
+            })
+            .expect(200)
+            .then(({ body: { comment } }) => {
+              expect(comment).to.have.keys(
+                "comment_id",
+                "author",
+                "article_id",
+                "votes",
+                "created_at",
+                "body"
+              );
+              expect(comment.article_id).to.equal(3);
+              expect(comment.author).to.equal("icellusedkars");
+            });
+        });
+      });
     });
   });
 });
