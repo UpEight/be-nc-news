@@ -217,6 +217,29 @@ describe("app", () => {
               expect(comment.author).to.equal("icellusedkars");
             });
         });
+        it("POST /comments responds with 400 Bad request if sent malformed request body", () => {
+          return request(app)
+            .post("/api/articles/3/comments")
+            .send({
+              body: "This is a really great article!"
+            })
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal("Malformed request body");
+            })
+            .then(() => {
+              return request(app)
+                .post("/api/articles/3/comments")
+                .send({
+                  wrongKey1: "icellusedkars",
+                  wrongKey2: "This is a really great article!"
+                })
+                .expect(400)
+                .then(({ body: { msg } }) => {
+                  expect(msg).to.equal("Malformed request body");
+                });
+            });
+        });
       });
     });
   });
