@@ -163,6 +163,14 @@ describe("app", () => {
             });
           });
       });
+      it("GET /?sort_by=invalid_column responds with 400, Bad request", () => {
+        return request(app)
+          .get("/api/articles?sort_by=invalid_column")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Bad request");
+          });
+      });
 
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
