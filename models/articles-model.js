@@ -7,6 +7,15 @@ exports.selectArticles = ({ sort_by, order = "desc", author, topic }) => {
       msg: `Unable to order comments by query ?order=${order} - order parameter must be 'asc' or 'desc'`
     });
   }
+  const articles = getArticles(sort_by, order, author, topic);
+  const authors = findAuthorInDb(author);
+  const promises = Promise.all([articles, authors]);
+  return promises.then(([articles]) => {
+    return articles;
+  });
+};
+
+const getArticles = (sort_by, order, author, topic) => {
   return connection
     .select("articles.*")
     .from("articles")
@@ -24,6 +33,26 @@ exports.selectArticles = ({ sort_by, order = "desc", author, topic }) => {
         return article;
       });
       return articles;
+    });
+};
+
+const findAuthorInDb = author => {
+  if (!author) {
+    return true;
+  }
+  return connection
+    .select("username")
+    .from("users")
+    .where("username", author)
+    .then(authors => {
+      if (authors.length === 0) {
+        return Promise.reject({
+          status: 400,
+          msg: `Bad request - author: ${author} does not exist`
+        });
+      } else {
+        return true;
+      }
     });
 };
 

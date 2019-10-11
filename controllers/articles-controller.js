@@ -1,5 +1,6 @@
 const {
   selectArticles,
+  checkIfAuthorExists,
   selectArticleById,
   updateVotes
 } = require("../models/articles-model");

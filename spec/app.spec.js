@@ -182,6 +182,17 @@ describe("app", () => {
           });
       });
 
+      it("GET /?author=not-in-database responds with 400, Bad request", () => {
+        return request(app)
+          .get("/api/articles?author=not-in-database")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal(
+              "Bad request - author: not-in-database does not exist"
+            );
+          });
+      });
+
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
           .get("/api/articles/1")
