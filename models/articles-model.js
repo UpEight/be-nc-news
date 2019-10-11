@@ -1,6 +1,6 @@
 const connection = require("../db/connection");
 
-exports.selectArticles = ({ sort_by, order = "desc" }) => {
+exports.selectArticles = ({ sort_by, order = "desc", author }) => {
   return connection
     .select("articles.*")
     .from("articles")
@@ -8,6 +8,9 @@ exports.selectArticles = ({ sort_by, order = "desc" }) => {
     .groupBy("articles.article_id")
     .count({ comment_count: "comments.comment_id" })
     .orderBy(sort_by || "created_at", order)
+    .modify(queryBuilder => {
+      if (author) queryBuilder.where("articles.author", author);
+    })
     .then(articles => {
       articles.forEach(article => {
         article.comment_count = parseInt(article.comment_count);

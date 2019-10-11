@@ -143,6 +143,16 @@ describe("app", () => {
               });
           });
       });
+      it("GET /?author=valid_username filters the articles array by valid_username", () => {
+        return request(app)
+          .get("/api/articles?author=icellusedkars")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            articles.forEach(article => {
+              expect(article.author).to.equal("icellusedkars");
+            });
+          });
+      });
 
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
