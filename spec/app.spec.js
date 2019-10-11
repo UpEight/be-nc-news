@@ -105,6 +105,26 @@ describe("app", () => {
             expect(articles[0].comment_count).to.be.a("number");
           });
       });
+      it("GET /  the array of articles is sorted by creation date in descending order by default", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).to.be.sortedBy("created_at", {
+              descending: true
+            });
+          });
+      });
+      it("GET /?sort_by=valid_column responds with 200 and the array of articles sorted by the column given as the query value, in descending order by default", () => {
+        return request(app)
+          .get("/api/articles?sort_by=title")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).to.be.sortedBy("title", {
+              descending: true
+            });
+          });
+      });
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
           .get("/api/articles/1")
