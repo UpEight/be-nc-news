@@ -358,6 +358,20 @@ describe("app", () => {
               );
             });
         });
+        describe("INVALID METHODS", () => {
+          it("PATCH, PUT, DELETE /comments responds with status 405, Method not allowed", () => {
+            const invalidMethods = ["patch", "put", "delete"];
+            const methodPromises = invalidMethods.map(method => {
+              return request(app)
+                [method]("/api/articles/1/comments")
+                .expect(405)
+                .then(({ body: { msg } }) => {
+                  expect(msg).to.equal("Method not allowed");
+                });
+            });
+            return Promise.all(methodPromises);
+          });
+        });
       });
     });
   });
