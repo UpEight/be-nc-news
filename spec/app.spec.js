@@ -125,6 +125,25 @@ describe("app", () => {
             });
           });
       });
+      it("GET /?order=valid_order responds with the array of articles sorted in 'asc' or 'desc' order, by the 'created_at' column by default", () => {
+        return request(app)
+          .get("/api/articles?order=asc")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).to.be.sortedBy("created_at");
+          })
+          .then(() => {
+            return request(app)
+              .get("/api/articles?order=desc")
+              .expect(200)
+              .then(({ body: { articles } }) => {
+                expect(articles).to.be.sortedBy("created_at", {
+                  descending: true
+                });
+              });
+          });
+      });
+
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
           .get("/api/articles/1")

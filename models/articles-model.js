@@ -1,13 +1,13 @@
 const connection = require("../db/connection");
 
-exports.selectArticles = ({ sort_by }) => {
+exports.selectArticles = ({ sort_by, order = "desc" }) => {
   return connection
     .select("articles.*")
     .from("articles")
     .leftJoin("comments", "articles.article_id", "comments.article_id")
     .groupBy("articles.article_id")
     .count({ comment_count: "comments.comment_id" })
-    .orderBy(sort_by || "created_at", "desc")
+    .orderBy(sort_by || "created_at", order)
     .then(articles => {
       articles.forEach(article => {
         article.comment_count = parseInt(article.comment_count);
