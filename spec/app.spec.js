@@ -153,6 +153,16 @@ describe("app", () => {
             });
           });
       });
+      it("GET /?topic=valid_topic filters the articles array by valid_topic", () => {
+        return request(app)
+          .get("/api/articles?topic=mitch")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            articles.forEach(article => {
+              expect(article.topic).to.equal("mitch");
+            });
+          });
+      });
 
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)

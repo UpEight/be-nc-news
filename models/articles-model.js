@@ -1,6 +1,6 @@
 const connection = require("../db/connection");
 
-exports.selectArticles = ({ sort_by, order = "desc", author }) => {
+exports.selectArticles = ({ sort_by, order = "desc", author, topic }) => {
   return connection
     .select("articles.*")
     .from("articles")
@@ -10,6 +10,7 @@ exports.selectArticles = ({ sort_by, order = "desc", author }) => {
     .orderBy(sort_by || "created_at", order)
     .modify(queryBuilder => {
       if (author) queryBuilder.where("articles.author", author);
+      if (topic) queryBuilder.where("articles.topic", topic);
     })
     .then(articles => {
       articles.forEach(article => {
