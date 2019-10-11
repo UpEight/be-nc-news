@@ -1,6 +1,12 @@
 const connection = require("../db/connection");
 
 exports.selectArticles = ({ sort_by, order = "desc", author, topic }) => {
+  if (order !== "asc" && order !== "desc") {
+    return Promise.reject({
+      status: 400,
+      msg: `Unable to order comments by query ?order=${order} - order parameter must be 'asc' or 'desc'`
+    });
+  }
   return connection
     .select("articles.*")
     .from("articles")
