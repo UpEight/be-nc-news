@@ -1,5 +1,9 @@
 const connection = require("../db/connection");
 
+exports.selectArticles = () => {
+  return connection.select("articles.*").from("articles");
+};
+
 exports.selectArticleById = id => {
   return connection
     .select("articles.*")

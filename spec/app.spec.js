@@ -81,6 +81,22 @@ describe("app", () => {
       });
     });
     describe("/articles", () => {
+      it("GET / responds with 200 and an articles array of article objects", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).to.be.an("array");
+            expect(articles[0]).to.contain.keys(
+              "author",
+              "title",
+              "article_id",
+              "body",
+              "topic",
+              "created_at"
+            );
+          });
+      });
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
           .get("/api/articles/1")

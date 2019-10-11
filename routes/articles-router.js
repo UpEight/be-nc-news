@@ -1,5 +1,6 @@
 const articlesRouter = require("express").Router();
 const {
+  sendArticles,
   sendArticleById,
   changeVotes
 } = require("../controllers/articles-controller");
@@ -10,6 +11,8 @@ const {
 } = require("../controllers/comments-controller");
 
 const { send405Error } = require("../errors");
+
+articlesRouter.route("/").get(sendArticles);
 
 articlesRouter
   .route("/:article_id")
