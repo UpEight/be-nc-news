@@ -1,5 +1,7 @@
 const connection = require("../db/connection");
 
+const { formatPostedComment } = require("../utils/utils");
+
 exports.insertComment = ({ article_id }, commentData) => {
   if (
     Object.keys(commentData).length !== 2 ||
@@ -8,10 +10,8 @@ exports.insertComment = ({ article_id }, commentData) => {
   ) {
     return Promise.reject({ status: 400, msg: "Malformed request body" });
   }
-  const formattedCommentData = { ...commentData };
-  formattedCommentData.author = commentData.username;
-  delete formattedCommentData.username;
-  formattedCommentData.article_id = article_id;
+
+  const formattedCommentData = formatPostedComment(commentData, article_id);
 
   return connection
     .insert(formattedCommentData)

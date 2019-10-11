@@ -5,6 +5,8 @@ const {
   formatComments
 } = require("../db/utils/utils");
 
+const { formatPostedComment } = require("../utils/utils");
+
 describe("formatDates", () => {
   it("returns a new empty array when passed an empty array", () => {
     const actual = formatDates([]);
@@ -394,5 +396,36 @@ describe("formatComments", () => {
         created_at: 975242163389
       }
     ]);
+  });
+});
+describe("formatPostedComment", () => {
+  it("returns a new empty object if passed an empty object", () => {
+    const postedComment = {};
+    const article_id = 3;
+    const actual = formatPostedComment(postedComment, article_id);
+    expect(actual).to.eql({});
+    expect(actual).to.not.equal(postedComment);
+  });
+  it("returns a new comment object with the 'username' key changed to 'author' and the article_id added", () => {
+    const postedComment = {
+      username: "icellusedkars",
+      body: "This is a really great article!"
+    };
+    const article_id = 3;
+    const actual = formatPostedComment(postedComment, article_id);
+    expect(actual).to.have.keys("author", "body", "article_id");
+    expect(actual.article_id).to.equal(3);
+  });
+  it("does not mutate the input", () => {
+    const postedComment = {
+      username: "icellusedkars",
+      body: "This is a really great article!"
+    };
+    const article_id = 3;
+    formatPostedComment(postedComment, article_id);
+    expect(postedComment).to.eql({
+      username: "icellusedkars",
+      body: "This is a really great article!"
+    });
   });
 });
