@@ -8,8 +8,9 @@ exports.selectArticles = ({ sort_by, order = "desc", author, topic }) => {
     });
   }
   const articles = getArticles(sort_by, order, author, topic);
-  const authors = findAuthorInDb(author);
-  const promises = Promise.all([articles, authors]);
+  const authors = findQueryValueInDb("users", "username", author);
+  const topics = findQueryValueInDb("topics", "slug", topic);
+  const promises = Promise.all([articles, authors, topics]);
   return promises.then(([articles]) => {
     return articles;
   });
@@ -36,19 +37,19 @@ const getArticles = (sort_by, order, author, topic) => {
     });
 };
 
-const findAuthorInDb = author => {
-  if (!author) {
+const findQueryValueInDb = (dbTable, dbColumn, queryValue) => {
+  if (!queryValue) {
     return true;
   }
   return connection
-    .select("username")
-    .from("users")
-    .where("username", author)
-    .then(authors => {
-      if (authors.length === 0) {
+    .select(dbColumn)
+    .from(dbTable)
+    .where(dbColumn, queryValue)
+    .then(records => {
+      if (records.length === 0) {
         return Promise.reject({
           status: 400,
-          msg: `Bad request - author: ${author} does not exist`
+          msg: `Bad request - query value: '${queryValue}' does not exist`
         });
       } else {
         return true;

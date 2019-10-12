@@ -188,11 +188,20 @@ describe("app", () => {
           .expect(400)
           .then(({ body: { msg } }) => {
             expect(msg).to.equal(
-              "Bad request - author: not-in-database does not exist"
+              "Bad request - query value: 'not-in-database' does not exist"
             );
           });
       });
-
+      it("GET /?topic=not-in-database responds with 400, Bad request", () => {
+        return request(app)
+          .get("/api/articles?topic=not-in-database")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal(
+              "Bad request - query value: 'not-in-database' does not exist"
+            );
+          });
+      });
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
           .get("/api/articles/1")
