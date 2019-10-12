@@ -36,10 +36,20 @@ exports.selectComments = ({ article_id }, { sort_by, order = "desc" }) => {
     .orderBy(sort_by || "created_at", order)
     .then(comments => {
       if (comments.length === 0) {
-        return Promise.reject({
-          status: 404,
-          msg: `Unable to get comments - no article found with article_id = ${article_id}`
-        });
+        return connection
+          .select("*")
+          .from("articles")
+          .where("article_id", article_id)
+          .then(articles => {
+            if (articles.length === 0) {
+              return Promise.reject({
+                status: 404,
+                msg: `Unable to get comments - no article found with article_id = ${article_id}`
+              });
+            } else {
+              return comments;
+            }
+          });
       }
       return comments;
     });

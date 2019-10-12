@@ -459,6 +459,14 @@ describe("app", () => {
                 });
             });
         });
+        it("GET /comments responds with 200 and an empty array if the article exists but has no comments", () => {
+          return request(app)
+            .get("/api/articles/2/comments")
+            .expect(200)
+            .then(({ body: { comments } }) => {
+              expect(comments.length).to.equal(0);
+            });
+        });
         it("GET /comments responds with 404, Article not found if /:article_id does not exist", () => {
           return request(app)
             .get("/api/articles/15/comments")
