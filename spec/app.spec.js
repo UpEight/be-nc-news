@@ -202,6 +202,14 @@ describe("app", () => {
             );
           });
       });
+      it("GET /?author=author-in-database responds with status 200 and an empty array if the author passed in the query has no articles", () => {
+        return request(app)
+          .get("/api/articles?author=lurker")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles.length).to.equal(0);
+          });
+      });
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
           .get("/api/articles/1")
