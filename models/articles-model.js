@@ -48,8 +48,8 @@ const findQueryValueInDb = (dbTable, dbColumn, queryValue) => {
     .then(records => {
       if (records.length === 0) {
         return Promise.reject({
-          status: 400,
-          msg: `Bad request - query value: '${queryValue}' does not exist`
+          status: 404,
+          msg: `No results found - query value: '${queryValue}' does not exist`
         });
       } else {
         return true;

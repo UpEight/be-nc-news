@@ -182,23 +182,23 @@ describe("app", () => {
           });
       });
 
-      it("GET /?author=not-in-database responds with 400, Bad request", () => {
+      it("GET /?author=not-in-database responds with 404, Not found", () => {
         return request(app)
           .get("/api/articles?author=not-in-database")
-          .expect(400)
+          .expect(404)
           .then(({ body: { msg } }) => {
             expect(msg).to.equal(
-              "Bad request - query value: 'not-in-database' does not exist"
+              "No results found - query value: 'not-in-database' does not exist"
             );
           });
       });
-      it("GET /?topic=not-in-database responds with 400, Bad request", () => {
+      it("GET /?topic=not-in-database responds with 404, Not found", () => {
         return request(app)
           .get("/api/articles?topic=not-in-database")
-          .expect(400)
+          .expect(404)
           .then(({ body: { msg } }) => {
             expect(msg).to.equal(
-              "Bad request - query value: 'not-in-database' does not exist"
+              "No results found - query value: 'not-in-database' does not exist"
             );
           });
       });
