@@ -218,6 +218,20 @@ describe("app", () => {
             expect(articles.length).to.equal(0);
           });
       });
+      describe("INVALID METHODS", () => {
+        it("POST, PATCH, PUT, DELETE /api/articles responds with status 405, Method not allowed", () => {
+          const invalidMethods = ["post", "patch", "put", "delete"];
+          const methodPromises = invalidMethods.map(method => {
+            return request(app)
+              [method]("/api/articles")
+              .expect(405)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal("Method not allowed");
+              });
+          });
+          return Promise.all(methodPromises);
+        });
+      });
       it("GET /:article_id responds with 200 and the requested article object", () => {
         return request(app)
           .get("/api/articles/1")
