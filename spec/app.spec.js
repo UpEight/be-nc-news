@@ -572,6 +572,15 @@ describe("app", () => {
             expect(msg).to.equal("Malformed request body");
           });
       });
+      it("PATCH /:comment_id responds with status 400 when sent value of wrong type", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: "wrong_value_type" })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Bad request");
+          });
+      });
     });
   });
 });
