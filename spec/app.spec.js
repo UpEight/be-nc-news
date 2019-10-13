@@ -590,6 +590,15 @@ describe("app", () => {
             expect(msg).to.equal("No comment found with comment_id = 25");
           });
       });
+      it("PATCH /notAnId responds with status 400, Bad request", () => {
+        return request(app)
+          .patch("/api/comments/notAnId")
+          .send({ inc_votes: 5 })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Bad request");
+          });
+      });
       it("DELETE /:comment_id responds with status 204 and no content", () => {
         return request(app)
           .delete("/api/comments/2")
