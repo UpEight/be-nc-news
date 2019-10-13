@@ -78,12 +78,18 @@ exports.selectArticleById = id => {
 };
 
 exports.updateVotes = ({ article_id }, votesData) => {
-  if (Object.keys(votesData).length !== 1) {
-    return Promise.reject({ status: 400, msg: "Malformed request body" });
+  const allowedKey = "inc_votes";
+  if (Object.keys(votesData).length > 0) {
+    if (
+      Object.keys(votesData).length > 1 ||
+      !Object.keys(votesData).includes(allowedKey)
+    ) {
+      return Promise.reject({ status: 400, msg: "Malformed request body" });
+    }
   }
   return connection("articles")
     .where("article_id", article_id)
-    .increment("votes", votesData.inc_votes)
+    .increment("votes", votesData.inc_votes || 0)
     .returning("*")
     .then(([article]) => {
       if (!article) {

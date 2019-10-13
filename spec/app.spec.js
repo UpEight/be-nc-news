@@ -289,25 +289,25 @@ describe("app", () => {
               .then(({ body: { article } }) => {
                 expect(article.votes).to.equal(85);
                 expect(article.article_id).to.equal(1);
+              })
+              .then(() => {
+                return request(app)
+                  .patch("/api/articles/1")
+                  .send({})
+                  .expect(200)
+                  .then(({ body: { article } }) => {
+                    expect(article.votes).to.equal(85);
+                  });
               });
           });
       });
       it("PATCH /:article_id responds with 400 Bad request if sent malformed request body", () => {
         return request(app)
           .patch("/api/articles/1")
-          .send({})
+          .send({ inc_votes: 5, name: "Mitch" })
           .expect(400)
           .then(({ body: { msg } }) => {
             expect(msg).to.equal("Malformed request body");
-          })
-          .then(() => {
-            return request(app)
-              .patch("/api/articles/1")
-              .send({ inc_votes: 5, name: "Mitch" })
-              .expect(400)
-              .then(({ body: { msg } }) => {
-                expect(msg).to.equal("Malformed request body");
-              });
           });
       });
       it("PATCH /:article_id responds with status 400 when sent value of wrong type", () => {
