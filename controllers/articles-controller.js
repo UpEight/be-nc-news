@@ -13,8 +13,7 @@ exports.sendArticles = (req, res, next) => {
 };
 
 exports.sendArticleById = (req, res, next) => {
-  const { article_id } = req.params;
-  selectArticleById(article_id)
+  selectArticleById(req.params)
     .then(article => {
       res.status(200).send({ article });
     })

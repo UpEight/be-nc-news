@@ -57,11 +57,11 @@ const findQueryValueInDb = (dbTable, dbColumn, queryValue) => {
     });
 };
 
-exports.selectArticleById = id => {
+exports.selectArticleById = ({ article_id }) => {
   return connection
     .select("articles.*")
     .from("articles")
-    .where("articles.article_id", id)
+    .where("articles.article_id", article_id)
     .leftJoin("comments", "articles.article_id", "comments.article_id")
     .groupBy("articles.article_id")
     .count({ comment_count: "comments.comment_id" })
@@ -69,7 +69,7 @@ exports.selectArticleById = id => {
       if (!article) {
         return Promise.reject({
           status: 404,
-          msg: `No article found with article_id = ${id}`
+          msg: `No article found with article_id = ${article_id}`
         });
       }
       article.comment_count = parseInt(article.comment_count);

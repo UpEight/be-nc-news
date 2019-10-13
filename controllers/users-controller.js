@@ -1,8 +1,7 @@
 const { selectUserByUsername } = require("../models/users-model");
 
 exports.sendUserByUsername = (req, res, next) => {
-  const { username } = req.params;
-  selectUserByUsername(username)
+  selectUserByUsername(req.params)
     .then(user => {
       res.status(200).send({ user });
     })
