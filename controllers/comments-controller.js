@@ -1,7 +1,8 @@
 const {
   insertComment,
   selectComments,
-  updateVotes
+  updateVotes,
+  deleteComment
 } = require("../models/comments-model");
 
 exports.postComment = (req, res, next) => {
@@ -26,4 +27,8 @@ exports.changeVotes = (req, res, next) => {
       res.status(200).send({ comment });
     })
     .catch(next);
+};
+
+exports.removeComment = (req, res, next) => {
+  deleteComment(req.params).then(() => res.sendStatus(204));
 };

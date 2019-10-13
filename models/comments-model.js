@@ -79,3 +79,9 @@ exports.updateVotes = ({ comment_id }, votesData) => {
       return comment;
     });
 };
+
+exports.deleteComment = ({ comment_id }) => {
+  return connection("comments")
+    .where("comment_id", comment_id)
+    .del();
+};

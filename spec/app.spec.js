@@ -590,6 +590,11 @@ describe("app", () => {
             expect(msg).to.equal("No comment found with comment_id = 25");
           });
       });
+      it("DELETE /:comment_id responds with status 204 and no content", () => {
+        return request(app)
+          .delete("/api/comments/2")
+          .expect(204);
+      });
     });
   });
 });
