@@ -5,9 +5,12 @@ const {
   removeComment
 } = require("../controllers/comments-controller");
 
+const { send405Error } = require("../errors");
+
 commentsRouter
   .route("/:comment_id")
   .patch(changeVotes)
-  .delete(removeComment);
+  .delete(removeComment)
+  .all(send405Error);
 
 module.exports = commentsRouter;
