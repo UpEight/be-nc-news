@@ -1,4 +1,8 @@
-const { insertComment, selectComments } = require("../models/comments-model");
+const {
+  insertComment,
+  selectComments,
+  updateVotes
+} = require("../models/comments-model");
 
 exports.postComment = (req, res, next) => {
   insertComment(req.params, req.body)
@@ -12,6 +16,14 @@ exports.sendComments = (req, res, next) => {
   selectComments(req.params, req.query)
     .then(comments => {
       res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.changeVotes = (req, res, next) => {
+  updateVotes(req.params, req.body)
+    .then(comment => {
+      res.status(200).send({ comment });
     })
     .catch(next);
 };

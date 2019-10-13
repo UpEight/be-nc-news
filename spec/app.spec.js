@@ -533,5 +533,36 @@ describe("app", () => {
         });
       });
     });
+    describe("/comments", () => {
+      it("PATCH /:comment_id accepts a vote object on the request body and responds with status 200 and the updated comment", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: 5 })
+          .expect(200)
+          .then(({ body: { comment } }) => {
+            expect(comment.votes).to.equal(21);
+            expect(comment.comment_id).to.equal(1);
+          })
+          .then(() => {
+            return request(app)
+              .patch("/api/comments/1")
+              .send({ inc_votes: -15 })
+              .expect(200)
+              .then(({ body: { comment } }) => {
+                expect(comment.votes).to.equal(6);
+                expect(comment.comment_id).to.equal(1);
+              })
+              .then(() => {
+                return request(app)
+                  .patch("/api/comments/1")
+                  .send({})
+                  .expect(200)
+                  .then(({ body: { comment } }) => {
+                    expect(comment.votes).to.equal(6);
+                  });
+              });
+          });
+      });
+    });
   });
 });

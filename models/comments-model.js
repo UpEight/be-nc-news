@@ -54,3 +54,13 @@ exports.selectComments = ({ article_id }, { sort_by, order = "desc" }) => {
       return comments;
     });
 };
+
+exports.updateVotes = ({ comment_id }, votesData) => {
+  return connection("comments")
+    .where("comment_id", comment_id)
+    .increment("votes", votesData.inc_votes || 0)
+    .returning("*")
+    .then(([comment]) => {
+      return comment;
+    });
+};
