@@ -30,5 +30,7 @@ exports.changeVotes = (req, res, next) => {
 };
 
 exports.removeComment = (req, res, next) => {
-  deleteComment(req.params).then(() => res.sendStatus(204));
+  deleteComment(req.params)
+    .then(() => res.sendStatus(204))
+    .catch(next);
 };

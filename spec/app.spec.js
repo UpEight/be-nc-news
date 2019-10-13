@@ -595,6 +595,14 @@ describe("app", () => {
           .delete("/api/comments/2")
           .expect(204);
       });
+      it("DELETE /not-a-number responds with status 400, Bad request", () => {
+        return request(app)
+          .delete("/api/comments/not-a-number")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Bad request");
+          });
+      });
     });
   });
 });
