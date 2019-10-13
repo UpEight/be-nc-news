@@ -56,6 +56,15 @@ exports.selectComments = ({ article_id }, { sort_by, order = "desc" }) => {
 };
 
 exports.updateVotes = ({ comment_id }, votesData) => {
+  const allowedKey = "inc_votes";
+  if (Object.keys(votesData).length > 0) {
+    if (
+      Object.keys(votesData).length > 1 ||
+      !Object.keys(votesData).includes(allowedKey)
+    ) {
+      return Promise.reject({ status: 400, msg: "Malformed request body" });
+    }
+  }
   return connection("comments")
     .where("comment_id", comment_id)
     .increment("votes", votesData.inc_votes || 0)

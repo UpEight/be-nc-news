@@ -563,6 +563,15 @@ describe("app", () => {
               });
           });
       });
+      it("PATCH /:comment_id responds with 400 Bad request if sent malformed request body", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: 5, name: "Mitch" })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Malformed request body");
+          });
+      });
     });
   });
 });
