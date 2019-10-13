@@ -581,6 +581,15 @@ describe("app", () => {
             expect(msg).to.equal("Bad request");
           });
       });
+      it("PATCH /:commentIdDoesNotExist responds with 404, Comment not found", () => {
+        return request(app)
+          .patch("/api/comments/25")
+          .send({ inc_votes: 5 })
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("No comment found with comment_id = 25");
+          });
+      });
     });
   });
 });

@@ -70,6 +70,12 @@ exports.updateVotes = ({ comment_id }, votesData) => {
     .increment("votes", votesData.inc_votes || 0)
     .returning("*")
     .then(([comment]) => {
+      if (!comment) {
+        return Promise.reject({
+          status: 404,
+          msg: `No comment found with comment_id = ${comment_id}`
+        });
+      }
       return comment;
     });
 };
