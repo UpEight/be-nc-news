@@ -1,6 +1,6 @@
 const connection = require("../db/connection");
 
-const { formatPostedComment } = require("../utils/utils");
+const { formatPostedComment } = require("../db/utils/utils");
 
 exports.insertComment = ({ article_id }, commentData) => {
   if (
