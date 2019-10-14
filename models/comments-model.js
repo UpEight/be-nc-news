@@ -29,30 +29,37 @@ exports.selectComments = ({ article_id }, { sort_by, order = "desc" }) => {
       msg: `Unable to order comments by query ?order=${order} - order parameter must be 'asc' or 'desc'`
     });
   }
+
+  const comments = getComments(article_id, sort_by, order);
+  const checkIfArticleExists = getArticles(article_id);
+
+  const promises = Promise.all([comments, checkIfArticleExists]);
+  return promises.then(([comments]) => {
+    return comments;
+  });
+};
+
+const getArticles = article_id => {
+  return connection
+    .select("*")
+    .from("articles")
+    .where("article_id", article_id)
+    .then(articles => {
+      if (articles.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `Unable to get comments - no article found with article_id = ${article_id}`
+        });
+      }
+    });
+};
+
+const getComments = (article_id, sort_by, order) => {
   return connection
     .select("comment_id", "author", "votes", "created_at", "body")
     .from("comments")
     .where("article_id", article_id)
-    .orderBy(sort_by || "created_at", order)
-    .then(comments => {
-      if (comments.length === 0) {
-        return connection
-          .select("*")
-          .from("articles")
-          .where("article_id", article_id)
-          .then(articles => {
-            if (articles.length === 0) {
-              return Promise.reject({
-                status: 404,
-                msg: `Unable to get comments - no article found with article_id = ${article_id}`
-              });
-            } else {
-              return comments;
-            }
-          });
-      }
-      return comments;
-    });
+    .orderBy(sort_by || "created_at", order);
 };
 
 exports.updateVotes = ({ comment_id }, votesData) => {
