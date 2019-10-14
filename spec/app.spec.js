@@ -612,6 +612,14 @@ describe("app", () => {
             expect(msg).to.equal("Bad request");
           });
       });
+      it("DELETE /comment-does-not-exist responds with 404: Not found", () => {
+        return request(app)
+          .delete("/api/comments/1000")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal("Comment with comment_id = 1000 not found");
+          });
+      });
       describe("INVALID METHODS", () => {
         it("GET, POST, PUT /:comment_id responds with status 405, Method not allowed", () => {
           const invalidMethods = ["get", "post", "put"];

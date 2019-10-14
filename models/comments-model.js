@@ -83,5 +83,13 @@ exports.updateVotes = ({ comment_id }, votesData) => {
 exports.deleteComment = ({ comment_id }) => {
   return connection("comments")
     .where("comment_id", comment_id)
-    .del();
+    .del()
+    .then(recordsDeleted => {
+      if (!recordsDeleted) {
+        return Promise.reject({
+          status: 404,
+          msg: `Comment with comment_id = ${comment_id} not found`
+        });
+      }
+    });
 };
