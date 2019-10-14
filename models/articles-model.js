@@ -8,9 +8,9 @@ exports.selectArticles = ({ sort_by, order = "desc", author, topic }) => {
     });
   }
   const articles = getArticles(sort_by, order, author, topic);
-  const authors = findQueryValueInDb("users", "username", author);
-  const topics = findQueryValueInDb("topics", "slug", topic);
-  const promises = Promise.all([articles, authors, topics]);
+  const checkAuthorExists = findQueryValueInDb("users", "username", author);
+  const checkTopicExists = findQueryValueInDb("topics", "slug", topic);
+  const promises = Promise.all([articles, checkAuthorExists, checkTopicExists]);
   return promises.then(([articles]) => {
     return articles;
   });
