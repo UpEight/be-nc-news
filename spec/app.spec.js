@@ -23,6 +23,20 @@ describe("app", () => {
   describe("/api", () => {
     beforeEach(() => connection.seed.run());
     after(() => connection.destroy());
+    describe("INVALID METHODS", () => {
+      it("POST, PATCH, PUT, DELETE / responds with status 405, Method not allowed", () => {
+        const invalidMethods = ["post", "patch", "put", "delete"];
+        const methodPromises = invalidMethods.map(method => {
+          return request(app)
+            [method]("/api")
+            .expect(405)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal("Method not allowed");
+            });
+        });
+        return Promise.all(methodPromises);
+      });
+    });
     describe("topics", () => {
       it("GET / responds with 200 and sends a response object containing an array of topic objects", () => {
         return request(app)
