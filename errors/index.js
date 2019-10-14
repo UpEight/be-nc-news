@@ -9,8 +9,12 @@ exports.handleCustomErrors = (err, req, res, next) => {
 };
 
 exports.handlePsqlErrors = (err, req, res, next) => {
-  const psqlBadRequestCodes = ["22P02", "23503", "42703"];
+  const psqlBadRequestCodes = ["22P02", "42703"];
+  const unprocessableEntityCodes = ["23503"];
   if (psqlBadRequestCodes.includes(err.code)) {
     res.status(400).send({ msg: "Bad request" });
+  }
+  if (unprocessableEntityCodes.includes(err.code)) {
+    res.status(422).send({ msg: "Unprocessable Entity" });
   } else next(err);
 };

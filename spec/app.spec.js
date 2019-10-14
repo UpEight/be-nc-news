@@ -396,16 +396,16 @@ describe("app", () => {
                 });
             });
         });
-        it("POST /comments responds with 400, Bad request if /:article_id does not exist", () => {
+        it("POST /comments responds with 422, Unprocessable Entity if /:article_id does not exist", () => {
           return request(app)
             .post("/api/articles/15/comments")
             .send({
               username: "icellusedkars",
               body: "This is a really great article!"
             })
-            .expect(400)
+            .expect(422)
             .then(({ body: { msg } }) => {
-              expect(msg).to.equal("Bad request");
+              expect(msg).to.equal("Unprocessable Entity");
             });
         });
         it("POST /comments responds with status 400, Bad request if /:article_id is of wrong type", () => {
