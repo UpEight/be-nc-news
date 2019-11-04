@@ -1,15 +1,15 @@
-const connection = require("../db/connection");
+const connection = require('../db/connection');
 
-exports.selectArticles = ({ sort_by, order = "desc", author, topic }) => {
-  if (order !== "asc" && order !== "desc") {
+exports.selectArticles = ({ sort_by, order = 'desc', author, topic }) => {
+  if (order !== 'asc' && order !== 'desc') {
     return Promise.reject({
       status: 400,
       msg: `Unable to order comments by query ?order=${order} - order parameter must be 'asc' or 'desc'`
     });
   }
   const articles = getArticles(sort_by, order, author, topic);
-  const checkAuthorExists = findQueryValueInDb("users", "username", author);
-  const checkTopicExists = findQueryValueInDb("topics", "slug", topic);
+  const checkAuthorExists = findQueryValueInDb('users', 'username', author);
+  const checkTopicExists = findQueryValueInDb('topics', 'slug', topic);
   const promises = Promise.all([articles, checkAuthorExists, checkTopicExists]);
   return promises.then(([articles]) => {
     return articles;
@@ -18,15 +18,15 @@ exports.selectArticles = ({ sort_by, order = "desc", author, topic }) => {
 
 const getArticles = (sort_by, order, author, topic) => {
   return connection
-    .select("articles.*")
-    .from("articles")
-    .leftJoin("comments", "articles.article_id", "comments.article_id")
-    .groupBy("articles.article_id")
-    .count({ comment_count: "comments.comment_id" })
-    .orderBy(sort_by || "created_at", order)
+    .select('articles.*')
+    .from('articles')
+    .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+    .groupBy('articles.article_id')
+    .count({ comment_count: 'comments.comment_id' })
+    .orderBy(sort_by || 'created_at', order)
     .modify(queryBuilder => {
-      if (author) queryBuilder.where("articles.author", author);
-      if (topic) queryBuilder.where("articles.topic", topic);
+      if (author) queryBuilder.where('articles.author', author);
+      if (topic) queryBuilder.where('articles.topic', topic);
     })
     .then(articles => {
       articles.forEach(article => {
@@ -59,17 +59,17 @@ const findQueryValueInDb = (dbTable, dbColumn, queryValue) => {
 
 exports.selectArticleById = ({ article_id }) => {
   return connection
-    .select("articles.*")
-    .from("articles")
-    .where("articles.article_id", article_id)
-    .leftJoin("comments", "articles.article_id", "comments.article_id")
-    .groupBy("articles.article_id")
-    .count({ comment_count: "comments.comment_id" })
+    .select('articles.*')
+    .from('articles')
+    .where('articles.article_id', article_id)
+    .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+    .groupBy('articles.article_id')
+    .count({ comment_count: 'comments.comment_id' })
     .then(([article]) => {
       if (!article) {
         return Promise.reject({
           status: 404,
-          msg: `No article found with article_id = ${article_id}`
+          msg: `Article ${article_id} not found`
         });
       }
       article.comment_count = parseInt(article.comment_count);
@@ -78,24 +78,24 @@ exports.selectArticleById = ({ article_id }) => {
 };
 
 exports.updateVotes = ({ article_id }, votesData) => {
-  const allowedKey = "inc_votes";
+  const allowedKey = 'inc_votes';
   if (Object.keys(votesData).length > 0) {
     if (
       Object.keys(votesData).length > 1 ||
       !Object.keys(votesData).includes(allowedKey)
     ) {
-      return Promise.reject({ status: 400, msg: "Malformed request body" });
+      return Promise.reject({ status: 400, msg: 'Malformed request body' });
     }
   }
-  return connection("articles")
-    .where("article_id", article_id)
-    .increment("votes", votesData.inc_votes || 0)
-    .returning("*")
+  return connection('articles')
+    .where('article_id', article_id)
+    .increment('votes', votesData.inc_votes || 0)
+    .returning('*')
     .then(([article]) => {
       if (!article) {
         return Promise.reject({
           status: 404,
-          msg: `No article found with article_id = ${article_id}`
+          msg: `Article ${article_id} not found`
         });
       }
       return article;

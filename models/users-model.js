@@ -1,15 +1,15 @@
-const connection = require("../db/connection");
+const connection = require('../db/connection');
 
 exports.selectUserByUsername = ({ username }) => {
   return connection
-    .select("*")
-    .from("users")
-    .where("username", username)
+    .select('*')
+    .from('users')
+    .where('username', username)
     .then(users => {
       if (users.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: `No user found with username = ${username}`
+          msg: `User '${username}' not found`
         });
       }
       return users[0];
