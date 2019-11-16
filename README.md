@@ -12,7 +12,7 @@ The data is stored in a PSQL database. The database Interactions are carried out
 
 ### Prerequisites
 
-_If you don't have PSQL installed, [follow these instructions to install PSQL](#psql-install-instructions)_.
+Requires a local running PSQL instance.
 
 ### Installation
 
@@ -102,48 +102,3 @@ Run the utility function tests:
 ```bash
 npm run test-utils
 ```
-
-## PSQL Install instructions
-
-_*Mac*_
-
-- Install Postrgres App https://postgresapp.com/
-  - Open the app (little blue elephant) and select initialize/start
-- type `psql` into your terminal. You should then see something similar to:
-
-```psql
-psql (9.6.5, server 9.6.6)
-Type "help" for help.
-
-username=#
-```
-
-- _if the above does not show/you get an error, run the following commands in your terminal:_
-  - `brew update`
-  - `brew doctor`
-  - `brew install postgresql`
-
-_*Ubuntu*_
-
-- Run this command in your terminal:
-  `sudo apt-get update`
-
-  `sudo apt-get install postgresql postgresql-contrib`
-
-- Next run the following commands to create a database user for Postgres.
-
-  `sudo -u postgres createuser --superuser $USER`
-
-  `sudo -u postgres createdb $USER`
-
-- Then run this command to enter the terminal application for PostgreSQL:
-
-  `psql`
-
-- Now type:
-
-  `ALTER USER username WITH PASSWORD 'mysecretword123';`
-
-* You can then exit out of psql by typing `\q`
-
-[Go to project installation instructions](#installation)
